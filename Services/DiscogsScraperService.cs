@@ -21,7 +21,8 @@ namespace DiscogsSniper.Services
         public async Task<List<Offer>> GetLatestOffersForLabelAsync(int labelId)
         {
             var offers = new List<Offer>();
-            string url = $"https://www.discogs.com/sell/list?label_id={labelId}&sort=listed%2Cdesc&limit=50";
+            // W metodzie GetLatestOffersForLabelAsync:
+            string url = $"https://www.discogs.com/sell/list?label_id={labelId}&sort=listed%2Cdesc&limit=50&format=Vinyl";
 
             try
             {
