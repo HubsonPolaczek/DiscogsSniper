@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using DiscogsSniper.Models;
 using DiscogsSniper.Services;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace DiscogsSniper
 {
@@ -105,14 +106,32 @@ namespace DiscogsSniper
             txtMaxAge.IsEnabled = true; // Odblokowujemy zmianę dni
         }
 
-        private void Engine_OnDealFound(object? sender, Offer offer)
+private void Engine_OnDealFound(object? sender, Offer offer)
+{
+    Dispatcher.Invoke(() =>
+    {
+        _offers.Insert(0, offer);
+        
+        try 
         {
-            Dispatcher.Invoke(() =>
-            {
-                _offers.Insert(0, offer);
-                System.Media.SystemSounds.Exclamation.Play();
-            });
+            // Nowoczesny sposób wywołania powiadomienia
+            var toast = new ToastContentBuilder()
+                .AddText("🔥 ZNALEZIONO OKAZJĘ!")
+                .AddText($"{offer.Title}")
+                .AddText($"Cena: {offer.TotalPrice:F2} zł");
+
+            // Jeśli .Show() nadal nie działa, użyjemy tej metody:
+            toast.Show(); 
         }
+        catch (Exception ex)
+        {
+            // Logujemy błąd, żeby nie wywaliło programu, jeśli Windows ma wyłączone powiadomienia
+            System.Diagnostics.Debug.WriteLine("Błąd Toast: " + ex.Message);
+        }
+
+        System.Media.SystemSounds.Exclamation.Play();
+    });
+}
 
         private void Engine_OnLogMessage(object? sender, string message)
         {
