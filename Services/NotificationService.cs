@@ -15,7 +15,7 @@ namespace DiscogsSniper.Services
 
         public async Task SendPushNotification(string title, string body)
         {
-            if (string.IsNullOrEmpty(AccessToken) || AccessToken == "o.EIVWjYYVCpIkCjU1tW94Wx2YTJioLUbT\r\n")
+            if (string.IsNullOrEmpty(AccessToken) || AccessToken == "token")
                 return;
 
             try
