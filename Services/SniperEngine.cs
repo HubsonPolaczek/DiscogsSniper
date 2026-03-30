@@ -10,6 +10,7 @@ namespace DiscogsSniper.Services
         private readonly DatabaseService _dbService;
         private readonly DiscogsScraperService _scraper;
         private readonly DiscogsPricingService _pricer;
+        private readonly NotificationService _notifier = new NotificationService();
 
         private CancellationTokenSource? _cts;
 
@@ -111,6 +112,10 @@ namespace DiscogsSniper.Services
                             }
                             offer.IsDeal = true; // <--- OZNACZAMY JAKO OKAZJĘ DLA KOLOROWANIA
                             Log($"[🔥 POTWIERDZONA OKAZJA] Płacisz {offer.TotalPrice:F2} zł za płytę wartą rynkowo ok. {stats.Median.Value:F2} zł!");
+
+                            _ = _notifier.SendPushNotification("🎯 OKAZJA WINYLOWA!", $"{offer.Title} za {offer.TotalPrice:F2} zł\nStan: {offer.Condition}");
+
+                            OnDealFound?.Invoke(this, offer);
                         }
                         else
                         {
